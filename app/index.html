@@ -3,90 +3,96 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Vice Cover Studio — turn your own photos into GTA 6-style multi-panel cover art, offline, in your browser.">
 <title>Vice Cover Studio — make your own GTA 6-style cover art</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <noscript><p style="padding:16px 28px">Vice Cover Studio needs JavaScript to draw your cover.</p></noscript>
-<header class="top">
-  <div>
+<header class="masthead">
+  <div class="brand">
     <h1>Vice Cover Studio</h1>
-    <p class="tag">Your photo. Your story. A Vice City cover.</p>
+    <p class="tagline">Your photo. Your story. A Vice City cover.</p>
   </div>
-  <p class="how">1 · Add photos &nbsp; 2 · Pick a layout &nbsp; 3 · Write the caption &nbsp; 4 · Export PNG</p>
+  <ol class="steps">
+    <li>Add photos</li>
+    <li>Pick a layout</li>
+    <li>Write the caption</li>
+    <li>Export PNG</li>
+  </ol>
 </header>
-<main class="app">
-  <section class="preview-col">
-    <canvas id="cover" width="1920" height="1080" aria-label="Cover preview — click a panel to select it, drag to move the photo"></canvas>
-    <p class="hint">Click a panel to select it, then drag the photo inside it to reposition. Everything stays on your device — photos are never uploaded.</p>
-  </section>
-  <section class="controls">
-    <div class="group">
-      <h2>Photos</h2>
-      <label class="file-label">Add your photos
-        <input id="photo" type="file" accept="image/*" multiple>
+<main class="workbench">
+  <aside class="rail" id="rail">
+    <section class="card">
+      <h2>01 · Photos</h2>
+      <label class="upload">Add your photos
+        <input id="photoInput" type="file" accept="image/*" multiple>
       </label>
       <div class="samples">
         <span>Or use a sample:</span>
-        <button id="sample-boulevard" type="button">Boulevard sunset</button>
-        <button id="sample-pier" type="button">Pier fishing</button>
+        <button type="button" data-sample="0">Pier fishing</button>
+        <button type="button" data-sample="1">Boulevard sunset</button>
       </div>
-    </div>
+    </section>
 
-    <div class="group">
-      <h2>Layout</h2>
-      <div class="row" role="group" aria-label="Panel layout">
-        <button class="layout-btn" type="button" data-layout="hero">Hero + strip</button>
-        <button class="layout-btn" type="button" data-layout="grid">Comic grid</button>
-        <button class="layout-btn" type="button" data-layout="columns">Triptych</button>
+    <section class="card">
+      <h2>02 · Layout</h2>
+      <div class="seg" role="group" aria-label="Panel layout">
+        <button class="seg-btn" type="button" data-layout="cinema">Cinema</button>
+        <button class="seg-btn" type="button" data-layout="mosaic">Mosaic</button>
+        <button class="seg-btn" type="button" data-layout="triptych">Triptych</button>
       </div>
-    </div>
+    </section>
 
-    <div class="group" id="panels">
+    <section class="card" id="panelSeg">
       <h2>Selected panel</h2>
-      <div class="row" role="group" aria-label="Select panel">
-        <button class="panel-btn" type="button">Panel 1</button>
-        <button class="panel-btn" type="button">Panel 2</button>
-        <button class="panel-btn" type="button">Panel 3</button>
-        <button class="panel-btn" type="button">Panel 4</button>
+      <div class="seg" role="group" aria-label="Select panel">
+        <button class="seg-btn" type="button" data-panel="0">Panel 1</button>
+        <button class="seg-btn" type="button" data-panel="1">Panel 2</button>
+        <button class="seg-btn" type="button" data-panel="2">Panel 3</button>
+        <button class="seg-btn" type="button" data-panel="3">Panel 4</button>
       </div>
       <label>Photo in this panel
-        <select id="panel-photo"></select>
+        <select id="photoPick"></select>
       </label>
-      <label>Zoom <span id="zoom-val">100%</span>
-        <input id="zoom" type="range" min="1" max="2.5" step="0.05" value="1">
+      <label>Zoom <span id="scaleVal">100%</span>
+        <input id="scaleRange" type="range" min="1" max="2.5" step="0.05" value="1">
       </label>
-      <div class="row">
-        <button id="flip" type="button">Flip photo</button>
-        <button id="centre" type="button">Reset crop</button>
+      <div class="seg">
+        <button id="mirrorBtn" type="button">Mirror photo</button>
+        <button id="resetBtn" type="button">Reset crop</button>
       </div>
-    </div>
+    </section>
 
-    <div class="group">
-      <h2>Caption</h2>
+    <section class="card">
+      <h2>03 · Caption</h2>
       <label>Title (big block letters)
-        <input id="title" type="text" maxlength="24" value="Sunset Heist">
+        <input id="titleInput" type="text" maxlength="24" value="Sunset Heist">
       </label>
       <label>Neon script line
-        <input id="subtitle" type="text" maxlength="40" value="Welcome to Vice City">
+        <input id="scriptInput" type="text" maxlength="40" value="Welcome to Vice City">
       </label>
       <label>Tagline
-        <input id="tagline" type="text" maxlength="40" value="A Vice City story">
+        <input id="taglineInput" type="text" maxlength="40" value="A Vice City story">
       </label>
-    </div>
+    </section>
 
-    <div class="group">
-      <h2>Export size</h2>
-      <div class="row" role="group" aria-label="Export size">
-        <button class="size-btn" type="button" data-size="square">1080 × 1080</button>
-        <button class="size-btn" type="button" data-size="portrait">1080 × 1350</button>
-        <button class="size-btn" type="button" data-size="wide">1920 × 1080</button>
+    <section class="card">
+      <h2>04 · Export</h2>
+      <div class="seg" role="group" aria-label="Export size">
+        <button class="seg-btn" type="button" data-size="square">1080 × 1080</button>
+        <button class="seg-btn" type="button" data-size="portrait">1080 × 1350</button>
+        <button class="seg-btn" type="button" data-size="wide">1920 × 1080</button>
       </div>
-      <button id="export" type="button" class="export">Export PNG</button>
-      <p id="status" role="status"></p>
-    </div>
+      <button id="exportBtn" type="button" class="export">Export PNG</button>
+      <p id="note" role="status"></p>
+    </section>
 
     <p class="fine">Cover lettering: Anton + Pacifico, both under the SIL Open Font License — see app/fonts/OFL.txt. Sample photos were made with an image model for this project. No Rockstar artwork, logo or font is used.</p>
+  </aside>
+  <section class="stage-wrap">
+    <canvas id="stage" width="1920" height="1080" aria-label="Cover preview — click a panel to select it, drag to move the photo"></canvas>
+    <p class="hint">Click a panel to select it, then drag the photo inside it to reposition. Everything stays on your device — photos are never uploaded.</p>
   </section>
 </main>
 <script type="module" src="./src/main.js"></script>

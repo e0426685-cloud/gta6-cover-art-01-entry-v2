@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/gta6-cover-art-01/e0426685-cloud/gta6-cover-art-01-entry-v2/rank.svg)](https://make.fun/bounty/gta6-cover-art-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
 [![reward](https://make.fun/badge/gta6-cover-art-01/e0426685-cloud/gta6-cover-art-01-entry-v2/reward.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
 
-**Vice Cover Studio** — an offline browser app that turns your own photos into GTA 6-style cover art: a multi-panel comic poster with a Vice City sunset/neon grade, a bold Anton block-letter title, a glowing Pacifico neon script line, and a tagline strip. Pick a layout (hero + strip, comic grid, or triptych), crop and position each photo per panel, write the caption, and export a PNG in 1080 × 1080, 1080 × 1350, or 1920 × 1080. Photos never leave your device.
+**Vice Cover Studio** — an offline browser app that turns your own photos into GTA 6-style cover art: a multi-panel comic poster with a Vice City sunset/neon grade and a halftone print screen, a bold Anton block-letter title, a glowing Pacifico neon script line, and a gold-ruled tagline strip. Pick a layout (cinema, mosaic, or triptych), crop and position each photo per panel, write the caption, and export a PNG in 1080 × 1080, 1080 × 1350, or 1920 × 1080. Photos never leave your device.
 
 ## Try it
 
@@ -16,8 +16,16 @@ Or open `app/index.html` directly from disk — the app is plain static files wi
 
 ## How it works
 
-- `app/src/cover.js` — `renderCover(ctx, state, W, H)` draws the whole cover on a `<canvas>`: panel photos with per-panel crop/zoom/flip, sunset grade, vignette, film grain, thick comic gutters, and the caption lettering. The same function draws the live preview and the exported PNG, so the download is exactly what you see.
+- `app/src/layouts.js` — panel geometry: each layout is a list of weighted cells, turned into pixel rectangles with comic gutters by one small solver.
+- `app/src/grade.js` — the Vice City look: a warm sunset wash, a halftone dot screen, a vignette, and seeded film grain.
+- `app/src/poster.js` — `paintPoster(ctx, doc, W, H)` draws the whole cover on a `<canvas>`: panel photos with per-panel crop/zoom/mirror, the grade, thick comic frames, and the caption band. The same function draws the live preview and the exported PNG, so the download is exactly what you see.
 - `app/src/main.js` — editor state, photo uploads, drag-to-pan cropping, layout/size pickers, PNG export.
+
+## Layouts
+
+- **Cinema** — one tall hero panel on the left, two stacked panels on the right.
+- **Mosaic** — a wide band on top, three small panels sharing the bottom strip.
+- **Triptych** — three columns, the middle one half as wide again as its neighbours.
 - `main.ts` — copies `app/` + `screenshots/` to `/output` and writes `/output/dossier.json` via the vendored make.fun library.
 
 ## Run it (grader entry point)
