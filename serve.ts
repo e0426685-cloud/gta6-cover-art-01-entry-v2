@@ -12,30 +12,30 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(fileURLToPath(new URL('./app', import.meta.url)));
 
-const MIME = {
-  '.html': 'text/html; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.mjs': 'text/javascript; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.webp': 'image/webp',
-  '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2',
-  '.woff': 'font/woff',
-  '.ttf': 'font/ttf',
-  '.otf': 'font/otf',
-  '.bin': 'application/octet-stream',
-  '.wasm': 'application/wasm',
-  '.wav': 'audio/wav',
-  '.mp3': 'audio/mpeg',
-  '.ogg': 'audio/ogg',
-  '.txt': 'text/plain; charset=utf-8',
-};
+function lookupMime(ext) {
+  switch (ext) {
+    case '.html': return 'text/html; charset=utf-8';
+    case '.js': case '.mjs': return 'text/javascript; charset=utf-8';
+    case '.css': return 'text/css; charset=utf-8';
+    case '.json': return 'application/json; charset=utf-8';
+    case '.png': return 'image/png';
+    case '.jpg': case '.jpeg': return 'image/jpeg';
+    case '.gif': return 'image/gif';
+    case '.webp': return 'image/webp';
+    case '.svg': return 'image/svg+xml';
+    case '.ico': return 'image/x-icon';
+    case '.woff2': return 'font/woff2';
+    case '.woff': return 'font/woff';
+    case '.ttf': return 'font/ttf';
+    case '.otf': return 'font/otf';
+    case '.wasm': return 'application/wasm';
+    case '.wav': return 'audio/wav';
+    case '.mp3': return 'audio/mpeg';
+    case '.ogg': return 'audio/ogg';
+    case '.txt': return 'text/plain; charset=utf-8';
+    default: return 'application/octet-stream';
+  }
+}
 
 function portFromArgs(argv) {
   const at = argv.indexOf('--port');
@@ -44,7 +44,7 @@ function portFromArgs(argv) {
 }
 
 /** Resolve a request path to a file inside app/, or null. */
-function fileFor(requestPath) {
+function resolveAsset(requestPath) {
   let pathname = requestPath;
   if (pathname.endsWith('/')) pathname += 'index.html';
   const file = resolve(join(root, normalize(pathname)));
@@ -57,7 +57,7 @@ function fileFor(requestPath) {
   return file;
 }
 
-function serve(request, response) {
+function handleRequest(request, response) {
   let pathname;
   try {
     pathname = decodeURIComponent(new URL(request.url ?? '/', 'http://localhost').pathname);
@@ -65,13 +65,13 @@ function serve(request, response) {
     response.writeHead(400).end('bad request');
     return;
   }
-  const file = fileFor(pathname);
+  const file = resolveAsset(pathname);
   if (!file) {
     response.writeHead(404).end('not found');
     return;
   }
   const headers = {
-    'content-type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream',
+    'content-type': lookupMime(extname(file).toLowerCase()),
     'content-length': statSync(file).size,
     'cache-control': 'no-store',
   };
@@ -84,6 +84,6 @@ function serve(request, response) {
 }
 
 const port = portFromArgs(process.argv.slice(2));
-createServer(serve).listen(port, '127.0.0.1', () => {
+createServer(handleRequest).listen(port, '127.0.0.1', () => {
   console.log(`app/ is on http://localhost:${port}`);
 });

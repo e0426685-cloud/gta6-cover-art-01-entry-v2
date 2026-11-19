@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/gta6-cover-art-01/e0426685-cloud/gta6-cover-art-01-entry-v2/rank.svg)](https://make.fun/bounty/gta6-cover-art-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
 [![reward](https://make.fun/badge/gta6-cover-art-01/e0426685-cloud/gta6-cover-art-01-entry-v2/reward.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
 
-**Vice Cover Studio** — an offline browser app that turns your own photos into GTA 6-style cover art: a multi-panel comic poster with a Vice City sunset/neon grade and a halftone print screen, a bold Anton block-letter title, a glowing Pacifico neon script line, and a gold-ruled tagline strip. Pick a layout (cinema, mosaic, or triptych), crop and position each photo per panel, write the caption, and export a PNG in 1080 × 1080, 1080 × 1350, or 1920 × 1080. Photos never leave your device.
+**Vice Cover Studio** turns your own photos into a GTA 6-style cover: a multi-panel comic poster with a Vice City sunset grade, halftone print dots, a bold Anton title, a glowing Pacifico script line, and a gold-ruled tagline. Choose a layout (cinema, mosaic, or triptych), slide each photo into place inside its panel, write the caption, and download a PNG at 1080 × 1080, 1080 × 1350, or 1920 × 1080. Nothing ever leaves your machine — the whole app runs offline in your browser.
 
 ## Try it
 
@@ -12,14 +12,14 @@
 node serve.ts   # then open http://localhost:8080
 ```
 
-Or open `app/index.html` directly from disk — the app is plain static files with no build step and makes no network requests. The two sample photos in `app/samples/` were made with an image model for this project; the fonts in `app/fonts/` (Anton, Pacifico) are under the SIL Open Font License, see `app/fonts/OFL.txt`. No Rockstar artwork, logo, or font is used.
+Or open `app/index.html` straight from disk: plain static files, no build step, no network requests. The two sample photos in `app/samples/` were made with an image model for this project; the fonts in `app/fonts/` (Anton, Pacifico) ship under the SIL Open Font License, see `app/fonts/OFL.txt`. No Rockstar artwork, logo, or font is used.
 
-## How it works
+## What is inside
 
-- `app/src/cover.js` — the whole renderer: `renderCover(ctx, doc, W, H)` splits the poster into panel rectangles, paints each photo around its focal point, runs the grade pipeline (sunset wash, halftone dot screen, inner glow, seeded grain), frames the panels, and draws the caption band. The same function draws the live preview and the exported PNG, so the download is exactly what you see.
-- `app/src/editor.js` — the `CoverEditor` class: document state, photo uploads, drag-to-move focal points, layout/size pickers, PNG export, and keyboard shortcuts.
-- `app/src/shots.js` — fixed scenes for screenshots: the same cover, posed three ways.
-- `main.ts` — copies `app/` + `screenshots/` to `/output` and writes `/output/dossier.json` via the vendored make.fun library.
+- `app/src/poster.js` — the renderer: `paintPoster(ctx, poster, W, H)` lays the poster out from a fraction grid, paints each photo with its pan offset, runs the grade chain (sunset wash, halftone dots, vignette, grain), frames the panels, and draws the caption band. The preview and the exported PNG run the same function, so the download is exactly what you see.
+- `app/src/app.js` — the editor: one state object, per-control listeners, photo uploads, drag-to-pan, arrow-key nudges, PNG export, and keyboard shortcuts.
+- `app/src/scenes.js` — fixed scenes for the screenshots: the same cover, posed three ways.
+- `main.ts` — copies `app/` + `screenshots/` to `/output` and writes `/output/dossier.json` through the vendored make.fun library.
 
 ## Layouts
 

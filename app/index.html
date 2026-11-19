@@ -9,7 +9,7 @@
 </head>
 <body>
 <noscript><p style="padding:16px 28px">Vice Cover Studio needs JavaScript to draw your cover.</p></noscript>
-<header class="topbar">
+<header class="masthead">
   <div class="brand">
     <h1>Vice Cover Studio</h1>
     <p class="tagline">Your photo. Your story. A Vice City cover.</p>
@@ -21,16 +21,12 @@
     <li>Export PNG</li>
   </ol>
 </header>
-<main class="board">
-  <section class="preview">
-    <canvas id="stage" width="1920" height="1080" aria-label="Cover preview — click a panel to select it, drag to move the photo"></canvas>
-    <p class="hint">Click a panel to select it, then drag the photo inside it to reposition. Everything stays on your device — photos are never uploaded.</p>
-  </section>
-  <aside class="controls" id="controls">
-    <section class="tool">
-      <h2>01 · Photos</h2>
+<main class="workspace">
+  <aside class="sidebar" id="panel">
+    <section class="panel">
+      <h2>Step 1 · Photos</h2>
       <label class="upload">Add your photos
-        <input id="uploadInput" type="file" accept="image/*" multiple>
+        <input id="fileInput" type="file" accept="image/*" multiple>
       </label>
       <div class="samples">
         <span>Or use a sample:</span>
@@ -39,8 +35,8 @@
       </div>
     </section>
 
-    <section class="tool">
-      <h2>02 · Layout</h2>
+    <section class="panel">
+      <h2>Step 2 · Layout</h2>
       <div class="chips" role="group" aria-label="Panel layout">
         <button class="chip" type="button" data-layout="cinema">Cinema</button>
         <button class="chip" type="button" data-layout="mosaic">Mosaic</button>
@@ -48,7 +44,7 @@
       </div>
     </section>
 
-    <section class="tool" id="panelPicker">
+    <section class="panel" id="panelBar">
       <h2>Selected panel</h2>
       <div class="chips" role="group" aria-label="Select panel">
         <button class="chip" type="button" data-panel="0">Panel 1</button>
@@ -57,44 +53,48 @@
         <button class="chip" type="button" data-panel="3">Panel 4</button>
       </div>
       <label>Photo in this panel
-        <select id="photoSelect"></select>
+        <select id="photoPicker"></select>
       </label>
-      <label>Zoom <span id="zoomLabel">100%</span>
-        <input id="zoomRange" type="range" min="1" max="2.5" step="0.05" value="1">
+      <label>Zoom <span id="zoomValue">100%</span>
+        <input id="zoomSlider" type="range" min="1" max="2.5" step="0.05" value="1">
       </label>
       <div class="chips">
-        <button id="flipBtn" type="button">Mirror photo</button>
-        <button id="cropResetBtn" type="button">Reset crop</button>
+        <button id="flipButton" type="button">Mirror photo</button>
+        <button id="resetCropBtn" type="button">Reset crop</button>
       </div>
     </section>
 
-    <section class="tool">
-      <h2>03 · Caption</h2>
+    <section class="panel">
+      <h2>Step 3 · Caption</h2>
       <label>Title (big block letters)
-        <input id="titleField" type="text" maxlength="24" value="Sunset Heist">
+        <input id="titleInput" type="text" maxlength="24" value="Neon Palms">
       </label>
       <label>Neon script line
-        <input id="scriptField" type="text" maxlength="40" value="Welcome to Vice City">
+        <input id="scriptInput" type="text" maxlength="40" value="Welcome to Leonida">
       </label>
       <label>Tagline
-        <input id="taglineField" type="text" maxlength="40" value="A Vice City story">
+        <input id="taglineInput" type="text" maxlength="40" value="A Leonida story">
       </label>
     </section>
 
-    <section class="tool">
-      <h2>04 · Export</h2>
+    <section class="panel">
+      <h2>Step 4 · Export</h2>
       <div class="chips" role="group" aria-label="Export size">
         <button class="chip" type="button" data-size="square">1080 × 1080</button>
         <button class="chip" type="button" data-size="portrait">1080 × 1350</button>
         <button class="chip" type="button" data-size="wide">1920 × 1080</button>
       </div>
-      <button id="saveBtn" type="button" class="save">Export PNG</button>
-      <p id="statusLine" role="status"></p>
+      <button id="exportBtn" type="button" class="save">Export PNG</button>
+      <p id="statusText" role="status"></p>
     </section>
 
     <p class="fine">Cover lettering: Anton + Pacifico, both under the SIL Open Font License — see app/fonts/OFL.txt. Sample photos were made with an image model for this project. No Rockstar artwork, logo or font is used.</p>
   </aside>
+  <section class="preview">
+    <canvas id="stage" width="1920" height="1080" aria-label="Cover preview — click a panel to select it, drag to move the photo"></canvas>
+    <p class="hint">Click a panel to select it, then drag the photo inside it to reposition. Arrow keys nudge the crop. Everything stays on your device — photos are never uploaded.</p>
+  </section>
 </main>
-<script type="module" src="./src/editor.js"></script>
+<script type="module" src="./src/app.js"></script>
 </body>
 </html>

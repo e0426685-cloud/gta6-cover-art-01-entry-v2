@@ -21,8 +21,8 @@ body {
   font: 15px/1.45 system-ui, -apple-system, sans-serif;
 }
 
-/* Top bar */
-.topbar {
+/* Masthead */
+.masthead {
   display: flex; flex-wrap: wrap; gap: 6px 36px; align-items: baseline; justify-content: space-between;
   padding: 12px 28px 10px; border-bottom: 1px solid var(--line);
 }
@@ -40,9 +40,9 @@ body {
   color: var(--gold); font-weight: 700;
 }
 
-/* Board: preview on the left, controls on the right. */
-.board {
-  display: grid; grid-template-columns: minmax(0, 1fr) 340px;
+/* Workspace: sidebar on the left, preview on the right. */
+.workspace {
+  display: grid; grid-template-columns: 340px minmax(0, 1fr);
   gap: 28px; padding: 16px 28px 24px; align-items: start;
 }
 .preview { min-width: 0; }
@@ -55,12 +55,12 @@ body {
 #stage:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 .hint { color: var(--soft); font-size: 13px; margin: 12px 2px 0; }
 
-.controls { display: flex; flex-direction: column; gap: 12px; }
-.tool {
+.sidebar { display: flex; flex-direction: column; gap: 12px; }
+.panel {
   background: var(--plum-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px;
   display: flex; flex-direction: column; gap: 8px;
 }
-.tool h2 {
+.panel h2 {
   margin: 0; font-family: 'Anton', sans-serif; font-weight: 400; font-size: 15px; letter-spacing: 2px;
   text-transform: uppercase; color: var(--gold);
 }
@@ -95,14 +95,14 @@ button.save {
   box-shadow: 0 4px 18px rgba(255, 46, 166, 0.45);
 }
 button.save:hover { filter: brightness(1.12); }
-#statusLine { margin: 0; color: var(--gold); min-height: 1.2em; font-size: 13px; }
+#statusText { margin: 0; color: var(--gold); min-height: 1.2em; font-size: 13px; }
 .fine { color: var(--soft); font-size: 12px; margin: 0; }
 
 @media (max-width: 900px) {
-  .board { grid-template-columns: 1fr; }
+  .workspace { grid-template-columns: 1fr; }
 }
 
 /* Screenshot mode: cover only, no editor chrome. */
-body.scene-cover .topbar, body.scene-cover .controls, body.scene-cover .hint { display: none; }
-body.scene-cover .board { display: block; padding: 0; }
+body.scene-cover .masthead, body.scene-cover .sidebar, body.scene-cover .hint { display: none; }
+body.scene-cover .workspace { display: block; padding: 0; }
 body.scene-cover #stage { width: 100vw; height: 100vh; max-height: none; box-shadow: none; border-radius: 0; object-fit: fill; }

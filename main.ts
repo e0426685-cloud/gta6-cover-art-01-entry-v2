@@ -28,23 +28,16 @@ import { buildDossier } from './vendor/makefun-app.ts';
 const repoRoot = fileURLToPath(new URL('.', import.meta.url));
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-function ensureDir(path) {
-  mkdirSync(path, { recursive: true });
-}
-
-function copyDir(name) {
-  const src = join(repoRoot, name);
-  if (existsSync(src)) cpSync(src, join(outDir, name), { recursive: true });
-}
-
-function handIn() {
+function stageOutput() {
   const index = join(repoRoot, 'app', 'index.html');
   if (!existsSync(index)) {
     throw new Error('app/index.html is missing — nothing to hand in');
   }
-  ensureDir(outDir);
-  copyDir('app');
-  copyDir('screenshots');
+  mkdirSync(outDir, { recursive: true });
+  for (const name of ['app', 'screenshots']) {
+    const src = join(repoRoot, name);
+    if (existsSync(src)) cpSync(src, join(outDir, name), { recursive: true });
+  }
   // The scorer's own caps (reference/gate.json): only text_max_bytes
   // shapes the bytes; the others refuse an entry the scorer would
   // refuse — more than 4 screenshots or one over 256 KiB; more than
@@ -61,4 +54,4 @@ function handIn() {
   writeFileSync(join(outDir, 'dossier.json'), dossier);
 }
 
-handIn();
+stageOutput();
