@@ -25,23 +25,26 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-app.ts';
 
-const here = fileURLToPath(new URL('.', import.meta.url));
+const repoRoot = fileURLToPath(new URL('.', import.meta.url));
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-function copyTree(src, dst) {
-  mkdirSync(dst, { recursive: true });
-  cpSync(src, dst, { recursive: true });
+function ensureDir(path) {
+  mkdirSync(path, { recursive: true });
+}
+
+function copyDir(name) {
+  const src = join(repoRoot, name);
+  if (existsSync(src)) cpSync(src, join(outDir, name), { recursive: true });
 }
 
 function handIn() {
-  if (!existsSync(join(here, 'app', 'index.html'))) {
+  const index = join(repoRoot, 'app', 'index.html');
+  if (!existsSync(index)) {
     throw new Error('app/index.html is missing — nothing to hand in');
   }
-  mkdirSync(outDir, { recursive: true });
-  copyTree(join(here, 'app'), join(outDir, 'app'));
-  if (existsSync(join(here, 'screenshots'))) {
-    copyTree(join(here, 'screenshots'), join(outDir, 'screenshots'));
-  }
+  ensureDir(outDir);
+  copyDir('app');
+  copyDir('screenshots');
   // The scorer's own caps (reference/gate.json): only text_max_bytes
   // shapes the bytes; the others refuse an entry the scorer would
   // refuse — more than 4 screenshots or one over 256 KiB; more than

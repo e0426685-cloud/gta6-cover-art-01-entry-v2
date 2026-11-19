@@ -10,44 +10,45 @@ import { createServer } from 'node:http';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const appRoot = resolve(fileURLToPath(new URL('./app', import.meta.url)));
+const root = resolve(fileURLToPath(new URL('./app', import.meta.url)));
 
-const mimeTypes = new Map([
-  ['.html', 'text/html; charset=utf-8'],
-  ['.js', 'text/javascript; charset=utf-8'],
-  ['.mjs', 'text/javascript; charset=utf-8'],
-  ['.css', 'text/css; charset=utf-8'],
-  ['.json', 'application/json; charset=utf-8'],
-  ['.png', 'image/png'],
-  ['.jpg', 'image/jpeg'],
-  ['.jpeg', 'image/jpeg'],
-  ['.gif', 'image/gif'],
-  ['.webp', 'image/webp'],
-  ['.svg', 'image/svg+xml'],
-  ['.ico', 'image/x-icon'],
-  ['.woff2', 'font/woff2'],
-  ['.woff', 'font/woff'],
-  ['.ttf', 'font/ttf'],
-  ['.otf', 'font/otf'],
-  ['.bin', 'application/octet-stream'],
-  ['.wasm', 'application/wasm'],
-  ['.wav', 'audio/wav'],
-  ['.mp3', 'audio/mpeg'],
-  ['.ogg', 'audio/ogg'],
-  ['.txt', 'text/plain; charset=utf-8'],
-]);
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif',
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.woff2': 'font/woff2',
+  '.woff': 'font/woff',
+  '.ttf': 'font/ttf',
+  '.otf': 'font/otf',
+  '.bin': 'application/octet-stream',
+  '.wasm': 'application/wasm',
+  '.wav': 'audio/wav',
+  '.mp3': 'audio/mpeg',
+  '.ogg': 'audio/ogg',
+  '.txt': 'text/plain; charset=utf-8',
+};
 
-function pickPort(argv) {
+function portFromArgs(argv) {
   const at = argv.indexOf('--port');
   const wanted = at === -1 ? 8080 : Number(argv[at + 1]);
   return Number.isInteger(wanted) && wanted > 0 && wanted < 65536 ? wanted : 8080;
 }
 
-function resolveFile(requestPath) {
+/** Resolve a request path to a file inside app/, or null. */
+function fileFor(requestPath) {
   let pathname = requestPath;
   if (pathname.endsWith('/')) pathname += 'index.html';
-  const file = resolve(join(appRoot, normalize(pathname)));
-  if (file !== appRoot && !file.startsWith(appRoot + sep)) return null;
+  const file = resolve(join(root, normalize(pathname)));
+  if (file !== root && !file.startsWith(root + sep)) return null;
   try {
     if (!statSync(file).isFile()) return null;
   } catch {
@@ -56,7 +57,7 @@ function resolveFile(requestPath) {
   return file;
 }
 
-function handle(request, response) {
+function serve(request, response) {
   let pathname;
   try {
     pathname = decodeURIComponent(new URL(request.url ?? '/', 'http://localhost').pathname);
@@ -64,15 +65,14 @@ function handle(request, response) {
     response.writeHead(400).end('bad request');
     return;
   }
-  const file = resolveFile(pathname);
+  const file = fileFor(pathname);
   if (!file) {
     response.writeHead(404).end('not found');
     return;
   }
-  const size = statSync(file).size;
   const headers = {
-    'content-type': mimeTypes.get(extname(file).toLowerCase()) ?? 'application/octet-stream',
-    'content-length': size,
+    'content-type': MIME[extname(file).toLowerCase()] ?? 'application/octet-stream',
+    'content-length': statSync(file).size,
     'cache-control': 'no-store',
   };
   if (request.method === 'HEAD') {
@@ -83,7 +83,7 @@ function handle(request, response) {
   createReadStream(file).pipe(response);
 }
 
-const port = pickPort(process.argv.slice(2));
-createServer(handle).listen(port, '127.0.0.1', () => {
+const port = portFromArgs(process.argv.slice(2));
+createServer(serve).listen(port, '127.0.0.1', () => {
   console.log(`app/ is on http://localhost:${port}`);
 });

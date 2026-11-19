@@ -9,7 +9,7 @@
 </head>
 <body>
 <noscript><p style="padding:16px 28px">Vice Cover Studio needs JavaScript to draw your cover.</p></noscript>
-<header class="masthead">
+<header class="topbar">
   <div class="brand">
     <h1>Vice Cover Studio</h1>
     <p class="tagline">Your photo. Your story. A Vice City cover.</p>
@@ -21,12 +21,16 @@
     <li>Export PNG</li>
   </ol>
 </header>
-<main class="workbench">
-  <aside class="rail" id="rail">
-    <section class="card">
+<main class="board">
+  <section class="preview">
+    <canvas id="stage" width="1920" height="1080" aria-label="Cover preview — click a panel to select it, drag to move the photo"></canvas>
+    <p class="hint">Click a panel to select it, then drag the photo inside it to reposition. Everything stays on your device — photos are never uploaded.</p>
+  </section>
+  <aside class="controls" id="controls">
+    <section class="tool">
       <h2>01 · Photos</h2>
       <label class="upload">Add your photos
-        <input id="photoInput" type="file" accept="image/*" multiple>
+        <input id="uploadInput" type="file" accept="image/*" multiple>
       </label>
       <div class="samples">
         <span>Or use a sample:</span>
@@ -35,66 +39,62 @@
       </div>
     </section>
 
-    <section class="card">
+    <section class="tool">
       <h2>02 · Layout</h2>
-      <div class="seg" role="group" aria-label="Panel layout">
-        <button class="seg-btn" type="button" data-layout="cinema">Cinema</button>
-        <button class="seg-btn" type="button" data-layout="mosaic">Mosaic</button>
-        <button class="seg-btn" type="button" data-layout="triptych">Triptych</button>
+      <div class="chips" role="group" aria-label="Panel layout">
+        <button class="chip" type="button" data-layout="cinema">Cinema</button>
+        <button class="chip" type="button" data-layout="mosaic">Mosaic</button>
+        <button class="chip" type="button" data-layout="triptych">Triptych</button>
       </div>
     </section>
 
-    <section class="card" id="panelSeg">
+    <section class="tool" id="panelPicker">
       <h2>Selected panel</h2>
-      <div class="seg" role="group" aria-label="Select panel">
-        <button class="seg-btn" type="button" data-panel="0">Panel 1</button>
-        <button class="seg-btn" type="button" data-panel="1">Panel 2</button>
-        <button class="seg-btn" type="button" data-panel="2">Panel 3</button>
-        <button class="seg-btn" type="button" data-panel="3">Panel 4</button>
+      <div class="chips" role="group" aria-label="Select panel">
+        <button class="chip" type="button" data-panel="0">Panel 1</button>
+        <button class="chip" type="button" data-panel="1">Panel 2</button>
+        <button class="chip" type="button" data-panel="2">Panel 3</button>
+        <button class="chip" type="button" data-panel="3">Panel 4</button>
       </div>
       <label>Photo in this panel
-        <select id="photoPick"></select>
+        <select id="photoSelect"></select>
       </label>
-      <label>Zoom <span id="scaleVal">100%</span>
-        <input id="scaleRange" type="range" min="1" max="2.5" step="0.05" value="1">
+      <label>Zoom <span id="zoomLabel">100%</span>
+        <input id="zoomRange" type="range" min="1" max="2.5" step="0.05" value="1">
       </label>
-      <div class="seg">
-        <button id="mirrorBtn" type="button">Mirror photo</button>
-        <button id="resetBtn" type="button">Reset crop</button>
+      <div class="chips">
+        <button id="flipBtn" type="button">Mirror photo</button>
+        <button id="cropResetBtn" type="button">Reset crop</button>
       </div>
     </section>
 
-    <section class="card">
+    <section class="tool">
       <h2>03 · Caption</h2>
       <label>Title (big block letters)
-        <input id="titleInput" type="text" maxlength="24" value="Sunset Heist">
+        <input id="titleField" type="text" maxlength="24" value="Sunset Heist">
       </label>
       <label>Neon script line
-        <input id="scriptInput" type="text" maxlength="40" value="Welcome to Vice City">
+        <input id="scriptField" type="text" maxlength="40" value="Welcome to Vice City">
       </label>
       <label>Tagline
-        <input id="taglineInput" type="text" maxlength="40" value="A Vice City story">
+        <input id="taglineField" type="text" maxlength="40" value="A Vice City story">
       </label>
     </section>
 
-    <section class="card">
+    <section class="tool">
       <h2>04 · Export</h2>
-      <div class="seg" role="group" aria-label="Export size">
-        <button class="seg-btn" type="button" data-size="square">1080 × 1080</button>
-        <button class="seg-btn" type="button" data-size="portrait">1080 × 1350</button>
-        <button class="seg-btn" type="button" data-size="wide">1920 × 1080</button>
+      <div class="chips" role="group" aria-label="Export size">
+        <button class="chip" type="button" data-size="square">1080 × 1080</button>
+        <button class="chip" type="button" data-size="portrait">1080 × 1350</button>
+        <button class="chip" type="button" data-size="wide">1920 × 1080</button>
       </div>
-      <button id="exportBtn" type="button" class="export">Export PNG</button>
-      <p id="note" role="status"></p>
+      <button id="saveBtn" type="button" class="save">Export PNG</button>
+      <p id="statusLine" role="status"></p>
     </section>
 
     <p class="fine">Cover lettering: Anton + Pacifico, both under the SIL Open Font License — see app/fonts/OFL.txt. Sample photos were made with an image model for this project. No Rockstar artwork, logo or font is used.</p>
   </aside>
-  <section class="stage-wrap">
-    <canvas id="stage" width="1920" height="1080" aria-label="Cover preview — click a panel to select it, drag to move the photo"></canvas>
-    <p class="hint">Click a panel to select it, then drag the photo inside it to reposition. Everything stays on your device — photos are never uploaded.</p>
-  </section>
 </main>
-<script type="module" src="./src/main.js"></script>
+<script type="module" src="./src/editor.js"></script>
 </body>
 </html>

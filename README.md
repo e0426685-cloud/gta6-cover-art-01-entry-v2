@@ -16,17 +16,16 @@ Or open `app/index.html` directly from disk — the app is plain static files wi
 
 ## How it works
 
-- `app/src/layouts.js` — panel geometry: each layout is a list of weighted cells, turned into pixel rectangles with comic gutters by one small solver.
-- `app/src/grade.js` — the Vice City look: a warm sunset wash, a halftone dot screen, a vignette, and seeded film grain.
-- `app/src/poster.js` — `paintPoster(ctx, doc, W, H)` draws the whole cover on a `<canvas>`: panel photos with per-panel crop/zoom/mirror, the grade, thick comic frames, and the caption band. The same function draws the live preview and the exported PNG, so the download is exactly what you see.
-- `app/src/main.js` — editor state, photo uploads, drag-to-pan cropping, layout/size pickers, PNG export.
+- `app/src/cover.js` — the whole renderer: `renderCover(ctx, doc, W, H)` splits the poster into panel rectangles, paints each photo around its focal point, runs the grade pipeline (sunset wash, halftone dot screen, inner glow, seeded grain), frames the panels, and draws the caption band. The same function draws the live preview and the exported PNG, so the download is exactly what you see.
+- `app/src/editor.js` — the `CoverEditor` class: document state, photo uploads, drag-to-move focal points, layout/size pickers, PNG export, and keyboard shortcuts.
+- `app/src/shots.js` — fixed scenes for screenshots: the same cover, posed three ways.
+- `main.ts` — copies `app/` + `screenshots/` to `/output` and writes `/output/dossier.json` via the vendored make.fun library.
 
 ## Layouts
 
 - **Cinema** — one tall hero panel on the left, two stacked panels on the right.
 - **Mosaic** — a wide band on top, three small panels sharing the bottom strip.
-- **Triptych** — three columns, the middle one half as wide again as its neighbours.
-- `main.ts` — copies `app/` + `screenshots/` to `/output` and writes `/output/dossier.json` via the vendored make.fun library.
+- **Triptych** — three columns, the middle one wider than its neighbours.
 
 ## Run it (grader entry point)
 
