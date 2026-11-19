@@ -1,3 +1,4 @@
+/* Vice Cover Studio — editor chrome. The cover itself is drawn on canvas. */
 @font-face { font-family: 'Anton'; src: url('./fonts/Anton-Regular.ttf') format('truetype'); font-display: swap; }
 @font-face { font-family: 'Pacifico'; src: url('./fonts/Pacifico-Regular.ttf') format('truetype'); font-display: swap; }
 
@@ -19,6 +20,8 @@ body {
   color: var(--ink);
   font: 15px/1.45 system-ui, -apple-system, sans-serif;
 }
+
+/* Header */
 .top {
   display: flex; flex-wrap: wrap; gap: 8px 32px; align-items: baseline; justify-content: space-between;
   padding: 12px 28px 10px; border-bottom: 1px solid var(--line);
@@ -29,6 +32,8 @@ body {
 }
 .top .tag { margin: 2px 0 0; color: var(--neon); font-family: 'Pacifico', cursive; font-size: 17px; }
 .top .how { margin: 0; color: var(--muted); font-size: 13px; }
+
+/* Two-column editor: preview on the left, controls on the right. */
 .app { display: flex; gap: 28px; padding: 16px 28px 24px; align-items: flex-start; }
 .preview-col { flex: 1 1 auto; min-width: 0; }
 #cover {
@@ -38,6 +43,7 @@ body {
 }
 #cover:active { cursor: grabbing; }
 .hint { color: var(--muted); font-size: 13px; margin: 12px 2px 0; }
+
 .controls { flex: 0 0 320px; display: flex; flex-direction: column; gap: 12px; }
 .group {
   background: var(--plum-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px;
@@ -59,8 +65,11 @@ button {
   background: #2e1d4e; color: var(--ink); cursor: pointer;
 }
 button:hover { border-color: var(--pink); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 button.active { background: var(--pink); border-color: var(--pink); color: #fff; }
 button.on { background: var(--teal); border-color: var(--teal); color: #062a2e; }
+
+/* The file input hides behind a styled label. */
 .file-label { cursor: pointer; }
 .file-label input { position: absolute; left: -9999px; }
 .file-label::after {
@@ -69,6 +78,7 @@ button.on { background: var(--teal); border-color: var(--teal); color: #062a2e; 
 }
 .samples { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
 .samples button { padding: 6px 10px; font-size: 13px; }
+
 button.export {
   background: var(--pink); border-color: var(--pink); color: #fff; font-size: 17px; padding: 12px;
   box-shadow: 0 4px 18px rgba(255, 46, 166, 0.45);
@@ -76,10 +86,13 @@ button.export {
 button.export:hover { filter: brightness(1.12); }
 #status { margin: 0; color: var(--gold); min-height: 1.2em; font-size: 13px; }
 .fine { color: var(--muted); font-size: 12px; margin: 0; }
+
 @media (max-width: 900px) {
   .app { flex-direction: column; }
   .controls { flex-basis: auto; width: 100%; }
 }
+
+/* Screenshot mode: cover only, no editor chrome. */
 body.shot-cover .top, body.shot-cover .controls, body.shot-cover .hint { display: none; }
 body.shot-cover .app { padding: 0; }
 body.shot-cover .preview-col { flex: 1 1 100%; }
