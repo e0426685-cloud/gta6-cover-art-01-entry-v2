@@ -10,7 +10,10 @@ const SCENE_CROPS = {
   cinema: [
     { fx: 0.5, fy: 0.4, zoom: 1.05 },
     { fx: 0.5, fy: 0.3, zoom: 1.1 },
-    { fx: 0.4, fy: 0.6, zoom: 1.6 },
+    // The boulevard woman's face sits high and right in the photo, so
+    // the close crop for the small panel centres up there, not on the
+    // torso.
+    { fx: 0.55, fy: 0.28, zoom: 1.25 },
   ],
   mosaic: [
     { fx: 0.5, fy: 0.3, zoom: 1.0 },
