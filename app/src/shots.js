@@ -1,6 +1,6 @@
-// Fixed scenes for screenshots: ?shot=editor shows the editor with sample
-// photos loaded; ?shot=cover shows the finished cover alone at the size the
-// export would be (the app's own drawing, at screenshot size).
+// Fixed scenes for screenshots. `?shot=editor` shows the editor with the
+// sample photos loaded; `?shot=cover` shows the finished cover alone, at the
+// size the export would be — the app's own drawing, at screenshot size.
 // window.__shotReady is set once the fonts are in and the cover is painted.
 export async function runShot(shot, query, app) {
   const { state, photos, redraw, SIZES } = app;
@@ -8,14 +8,16 @@ export async function runShot(shot, query, app) {
   const boulevard = pick('boulevard');
   const pier = pick('pier');
 
+  // Query overrides: layout, caption text and export size.
   if (query.get('layout')) state.layout = query.get('layout');
   if (query.get('title') !== null) state.title = query.get('title');
   if (query.get('subtitle') !== null) state.subtitle = query.get('subtitle');
   if (query.get('tagline') !== null) state.tagline = query.get('tagline');
   if (query.get('size') && SIZES[query.get('size')]) state.size = query.get('size');
 
-  // Panel photos per scene: hero = boulevard sunset, strip mixes pier + a
-  // close crop of the boulevard car; grid/columns alternate the two samples.
+  // Panel photos per scene. Hero: boulevard sunset on top, pier plus a
+  // close crop of the boulevard car in the strip. Grid and columns
+  // alternate the two samples.
   const P = state.panels;
   const reset = () => P.forEach((p) => { p.zoom = 1; p.ox = 0; p.oy = 0; p.flip = false; });
   reset();
@@ -34,10 +36,11 @@ export async function runShot(shot, query, app) {
     P[2].photo = boulevard; P[2].zoom = 1.6; P[2].ox = 0.25; P[2].oy = -0.4;
   }
 
+  // In cover mode the editor chrome hides, leaving only the poster.
   if (shot === 'cover') document.body.classList.add('shot-cover');
   redraw();
   await document.fonts.ready;
-  redraw(); // repaint once the bundled fonts are actually in
+  redraw(); // paint once more now the bundled fonts are really in
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   window.__shotReady = true;
 }
